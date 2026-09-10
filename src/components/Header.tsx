@@ -20,6 +20,7 @@ import {
   Upload,
   Layers,
   Sparkles,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -37,6 +38,8 @@ interface HeaderProps {
   onDownloadMarkdown: () => void;
   onOpenTemplates: () => void;
   onOpenPdfModal: () => void;
+  onOpenPrivacy: () => void;
+  onOpenTerms: () => void;
   // Auth
   user: User | null;
   isAuthenticated: boolean;
@@ -60,6 +63,8 @@ export const Header: React.FC<HeaderProps> = ({
   onDownloadMarkdown,
   onOpenTemplates,
   onOpenPdfModal,
+  onOpenPrivacy,
+  onOpenTerms,
   user,
   isAuthenticated,
   isLoggingIn,
@@ -112,9 +117,20 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex h-14 items-center justify-between px-3 sm:px-4 gap-2">
         {/* Left: App Logo & Document Info */}
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          {/* Workspace Markdown Brand Icon */}
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white shadow-xs">
-            <FileText className="h-5 w-5" />
+          {/* Brand Icon & Verified App Name */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white shadow-xs font-bold text-sm">
+              M↓
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs sm:text-sm font-black text-gray-950 tracking-tight leading-none">
+                All in One markdown
+              </span>
+              <span className="hidden sm:inline text-[10px] text-gray-500 font-medium leading-tight">
+                Editor &amp; Drive Sync
+              </span>
+            </div>
+            <div className="h-6 w-px bg-gray-200 mx-1 shrink-0" />
           </div>
 
           <div className="flex flex-col min-w-0 flex-1 max-w-sm sm:max-w-md">
@@ -272,6 +288,32 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <BookOpen className="h-3 w-3 text-indigo-600" />
                 <span>Templates</span>
+              </button>
+
+              <span className="text-gray-300">|</span>
+
+              {/* Privacy Policy */}
+              <button
+                id="btn-open-privacy"
+                type="button"
+                onClick={onOpenPrivacy}
+                className="rounded px-2 py-0.5 hover:bg-blue-50 text-gray-600 hover:text-blue-700 transition-colors flex items-center gap-1"
+                title="View Privacy Policy (?view=privacy)"
+              >
+                <ShieldCheck className="h-3 w-3 text-blue-600" />
+                <span>Privacy</span>
+              </button>
+
+              {/* Terms of Service */}
+              <button
+                id="btn-open-terms"
+                type="button"
+                onClick={onOpenTerms}
+                className="rounded px-2 py-0.5 hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1"
+                title="View Terms of Service (?view=terms)"
+              >
+                <FileText className="h-3 w-3 text-gray-500" />
+                <span>Terms</span>
               </button>
             </div>
           </div>

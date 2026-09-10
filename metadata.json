@@ -1,6 +1,6 @@
 {
-  "name": "Workspace Markdown Editor",
-  "description": "Open, edit, and preview Markdown files in real-time with Google Drive integration and PDF export.",
+  "name": "All in One markdown",
+  "description": "All in One markdown - An all-in-one in-place Markdown editor with seamless Google Drive integration and high-fidelity PDF export.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

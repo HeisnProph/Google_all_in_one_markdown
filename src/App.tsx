@@ -27,6 +27,8 @@ import { MarkdownPreview } from './components/MarkdownPreview';
 import { DriveFilePickerModal } from './components/DriveFilePickerModal';
 import { PdfExportModal } from './components/PdfExportModal';
 import { TemplatesModal } from './components/TemplatesModal';
+import { LegalModal } from './components/LegalModal';
+import { Footer } from './components/Footer';
 import { ConfirmDialog } from './components/ConfirmDialog';
 import { Check, Info, AlertCircle } from 'lucide-react';
 
@@ -81,6 +83,22 @@ export default function App() {
   const [isDrivePickerOpen, setIsDrivePickerOpen] = useState<boolean>(false);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState<boolean>(false);
   const [isTemplatesModalOpen, setIsTemplatesModalOpen] = useState<boolean>(false);
+  const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
+  const [isStandaloneLegal, setIsStandaloneLegal] = useState<boolean>(false);
+
+  // Check URL query parameters on load (e.g. ?view=privacy or ?view=terms)
+  useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewParam = urlParams.get('view')?.toLowerCase();
+      if (viewParam === 'privacy' || viewParam === 'terms') {
+        setLegalModal(viewParam);
+        setIsStandaloneLegal(true);
+      }
+    } catch {
+      // Ignore query parsing error if sandboxed
+    }
+  }, []);
 
   // Confirm dialog state (Destructive operation check for Google Drive overwrite)
   const [confirmDialog, setConfirmDialog] = useState<{
@@ -491,6 +509,25 @@ export default function App() {
     showToast(`Loaded "${template.title}" template`, 'info');
   };
 
+  // Standalone full-page view for Google compliance verification & direct query access
+  if (isStandaloneLegal && legalModal) {
+    return (
+      <LegalModal
+        type={legalModal}
+        isStandalonePage={true}
+        onClose={() => {
+          setLegalModal(null);
+          setIsStandaloneLegal(false);
+          try {
+            window.history.pushState({}, '', window.location.pathname);
+          } catch {
+            // Ignore if sandboxed
+          }
+        }}
+      />
+    );
+  }
+
   return (
     <div
       id="workspace-markdown-app"
@@ -526,6 +563,8 @@ export default function App() {
         onDownloadMarkdown={handleDownloadMarkdown}
         onOpenTemplates={() => setIsTemplatesModalOpen(true)}
         onOpenPdfModal={() => setIsPdfModalOpen(true)}
+        onOpenPrivacy={() => setLegalModal('privacy')}
+        onOpenTerms={() => setLegalModal('terms')}
         user={user}
         isAuthenticated={isAuthenticated}
         isLoggingIn={isLoggingIn}
@@ -597,6 +636,18 @@ export default function App() {
         )}
       </main>
 
+      {/* Global Application Footer with Brand and Compliance Links */}
+      <Footer
+        onOpenPrivacy={() => {
+          setIsStandaloneLegal(false);
+          setLegalModal('privacy');
+        }}
+        onOpenTerms={() => {
+          setIsStandaloneLegal(false);
+          setLegalModal('terms');
+        }}
+      />
+
       {/* Google Drive Picker Modal */}
       <DriveFilePickerModal
         isOpen={isDrivePickerOpen}
@@ -638,6 +689,12 @@ export default function App() {
         isOpen={isTemplatesModalOpen}
         onClose={() => setIsTemplatesModalOpen(false)}
         onSelectTemplate={handleSelectTemplate}
+      />
+
+      {/* Legal & Privacy Policy Modal */}
+      <LegalModal
+        type={legalModal}
+        onClose={() => setLegalModal(null)}
       />
 
       {/* Destructive Operation Confirmation Dialog */}
