@@ -1,0 +1,6 @@
+{
+  "name": "Workspace Markdown Editor",
+  "description": "Open, edit, and preview Markdown files in real-time with Google Drive integration and PDF export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
